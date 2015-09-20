@@ -12,9 +12,6 @@ for row in csv_obj:
     data.append(row)
 data = np.array(data)
 
-number_passengers = np.size(data[0::,1])
-number_survived = np.sum(data[0::,1].astype(np.float))
-
 women = data[0::,4] == "female"
 men = data[0::,4] != "female"
 

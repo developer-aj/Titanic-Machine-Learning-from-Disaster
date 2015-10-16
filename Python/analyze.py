@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pylab as plt
 from scipy.stats import mode
 
 def clean_data(data):
@@ -17,14 +18,39 @@ def clean_data(data):
 
     return data
 
+
+def plot_data(data):
+    def proportionSurvived(discreteVar):
+        by_var = data.groupby([discreteVar, 'Survived'])
+
+        table = by_var.size()
+        print table
+        table = table.unstack()
+        normedtable = table.div(table.sum(1), axis=0)
+        return normedtable
+
+    discreteVarList = ['Sex', 'Pclass', 'Embarked']
+    fig1, axes1 = plt.subplots(3, 1)
+
+    for i in range(3):
+        var = discreteVarList[i]
+        table = proportionSurvived(var)
+        table.plot(kind='barh', stacked=True, ax=axes1[i])
+    fig1.show()
+
 def main():
     path = '../Data/'
-    train_df = pd.read_csv(path + 'train.csv')
 
-    # Description of data
-    print train_df.describe()
+    print 'Loading data...'
+    train_df = pd.read_csv(path + 'train.csv')
+    test_df = pd.read_csv(path + 'test.csv')
+
+    print 'Cleaning data...'
     train_df = clean_data(train_df)
-    print train_df
+    test_df = clean_data(test_df)
+
+    print 'Plotting data...'
+    plot_data(train_df)
 
 if __name__ == '__main__':
     main()
